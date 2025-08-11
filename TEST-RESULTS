@@ -1,0 +1,33 @@
+TEST-RESULTS (black box + observații)
+
+Versiune testată: proiectul calculator-java (Calculator.java, Start.java)
+
+1) Testare expresii corecte (așteptările mele vs. ce face programul)
+- 4+5 → așteptat 9 → rezultat: 9 (OK)
+- 10+5*4+3 → așteptat 33 → rezultat: 33 (OK; se respectă prioritatea * și / față de + și -)
+- -5+2 → așteptat -3 → rezultat: -3 (OK; expresiile care încep cu + sau - sunt suportate)
+- 4.5+1.5 → așteptat 6.0 → rezultat: 6.0 (OK; sunt acceptate numere cu zecimale)
+- 2/4 → așteptat 0.5 → rezultat: 0.5 (OK)
+
+2) Cazuri problematice / defecte observate
+- 10/2*3 → așteptat 15 (se evaluează stânga→dreapta pentru / și *) 
+           rezultat observat: 1.6666… (DEFECT: programul calculează înmulțirea înaintea împărțirii, nu păstrează ordinea stânga→dreapta pentru * și /)
+- 10/0 → așteptat: eroare sau mesaj clar
+         rezultat observat: Infinity (COMPORTAMENT: nu se aruncă eroare; se întoarce Infinity, deoarece se folosesc float-uri)
+- ((2+3)*4) → așteptat 20
+              rezultat observat: ERROR (LIPSĂ FUNCȚIONALITATE: parantezele nu sunt suportate)
+- 2+-3 → așteptat: -1 (dacă ar fi suportat minus unar în mijloc)
+         rezultat observat: ERROR (DEFECT/Limitare: expresiile cu operatori consecutivi nu sunt acceptate)
+- a+b → așteptat: eroare/input invalid
+       rezultat observat: ERROR (OK – input invalid tratat simplu)
+
+3) Test unitar simplu pentru metoda Calculate (JUnit 4)
+- testCalculateSimpleAddition → 4+5 = 9 (trece)
+- testCalculateWithPriority → 10+5*4+3 = 33 (trece)
+- testDivisionOrderBug → 10/2*3 ar trebui 15, dar iese 1.666… (evidențiază defectul de ordine * și /)
+- testDivisionByZero → 10/0 întoarce „Infinity” (nu excepție) – comportament actual
+
+4) Concluzie generală
+Programul funcționează pentru cazuri simple, numere zecimale și semn unar la începutul expresiei. 
+Limitări/defecte: nu suportă paranteze, nu păstrează ordinea corectă stânga→dreapta între * și /, nu suportă operatori consecutivi (ex: 2+-3). 
+Împărțirea la 0 întoarce „Infinity” (nu se validează explicit).
